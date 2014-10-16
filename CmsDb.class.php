@@ -1,5 +1,5 @@
 <?php
-	require_once 'SimpleDb.class.php';
+	require_once 'SimplePDO.class.php';
 	require_once 'CmsDbResult.class.php';
 		
 	class CmsDbException extends SimpleDbException {}
