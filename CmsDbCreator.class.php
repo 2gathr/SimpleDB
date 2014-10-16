@@ -3,7 +3,7 @@
 		private $db, $name;
 		private $columns = array ();
 		
-		private function __construct (SimpleDb $db, $name) { //$name is the table name
+		private function __construct (SimplePDO $db, $name) { //$name is the table name
 			try {
 				$this -> db = $db;
 				$this -> name = $name;
@@ -29,7 +29,7 @@
 			}
 		}
 		
-		public static function formatDatabase (SimpleDb $db) {
+		public static function formatDatabase (SimplePDO $db) {
 			try {
 				$db -> query (
 					'CREATE TABLE CmsDb_table (
