@@ -1,9 +1,9 @@
 <?php
 	require_once 'NestedTraPDO.class.php';
 	
-	class SimpleDbException extends Exception {}
+	class SimplePDOException extends Exception {}
 	
-	class SimpleDb {
+	class SimplePDO {
 		private $db, $host, $dbName, $lastQuery = array ();
 		private static $pdoTypes = array (
 			'b' => PDO::PARAM_BOOL,
@@ -63,13 +63,13 @@ EOT;
 					default:
 						$this -> lastQuery['phCount'] = $phCount = self::getPlaceholderCount ($query);
 						if (!is_string ($arg[1])) {
-							throw new SimpleDbException ('placeholder types is not a string', 101);
+							throw new SimplePDOException ('placeholder types is not a string', 101);
 						}
 						if ($phCount != strlen ($arg[1])) {
-							throw new SimpleDbException ('placeholder types count doesn\'t match placeholder count', 102);
+							throw new SimplePDOException ('placeholder types count doesn\'t match placeholder count', 102);
 						}
 						if (is_array ($arg[2])) {
-							if (count ($arg) != 3) throw new SimpleDbException ('array for values given but too many arguments', 103);
+							if (count ($arg) != 3) throw new SimplePDOException ('array for values given but too many arguments', 103);
 							$phVal = array ();
 							foreach ($arg[2] as $key => $val) {
 								$phVal[] = $val;
@@ -77,13 +77,13 @@ EOT;
 						} else $phVal = array_slice ($arg, 2);
 						$this -> lastQuery['phValues'] = $phVal;
 						if ($phCount != count ($phVal)) {
-							throw new SimpleDbException ('placeholder values count doesn\'t match placeholder count', 104);
+							throw new SimplePDOException ('placeholder values count doesn\'t match placeholder count', 104);
 						}
 						$stmt = $this -> db -> prepare ($query);
 						for ($i = 0; $i < count ($phVal); $i ++) {
 							$phType = substr ($arg[1], $i, 1);
 							if (!isset (self::$pdoTypes[$phType])) {
-								throw new SimpleDbException ('unknown type of value: "'.$type.'"', 105);
+								throw new SimplePDOException ('unknown type of value: "'.$type.'"', 105);
 							}
 							$stmt -> bindValue ($i + 1, $phVal[$i], self::$pdoTypes[$phType]);
 						}
@@ -136,7 +136,7 @@ EOT;
 		
 		public function getLastQuery () {
 			if (empty ($this -> lastQuery)) {
-				throw new SimpleDbException ('no query executed', 106);
+				throw new SimplePDOException ('no query executed', 106);
 			}
 			return $this -> lastQuery;
 		}
