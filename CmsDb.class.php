@@ -2,9 +2,9 @@
 	require_once 'SimplePDO.class.php';
 	require_once 'CmsDbResult.class.php';
 		
-	class CmsDbException extends SimpleDbException {}
+	class CmsDbException extends SimplePDOException {}
 	
-	class CmsDb extends SimpleDb {
+	class CmsDb extends SimplePDO {
 		const STATE_DEFAULT = 1;
 		const STATE_DELETED = 2;
 		
@@ -109,7 +109,7 @@ EOT;
 					$this -> lastQuery['executedQuery'] = $passedQuery;
 					$activeTra = false;
 					$ret = parent::query ($passedQuery, $phTypes, $phValues);
-					$this -> lastQuery['SimpleDb'] = parent::getLastQuery ();
+					$this -> lastQuery['SimplePDO'] = parent::getLastQuery ();
 					return $ret;
 				}
 				parent::commitTra ();
@@ -170,7 +170,7 @@ EOT;
 				}
 				$this -> lastQuery['executedQuery'] = $query;
 				$result = parent::query ($query, $phTypes, $phValues);
-				$this -> lastQuery['SimpleDb'] = parent::getLastQuery ();
+				$this -> lastQuery['SimplePDO'] = parent::getLastQuery ();
 				$this -> checkKeys ($tableName); //you can't use $keys as updatedColumns because the default values are updated as well
 				return new CmsDbResult ($this, 'INSERT', $insertId, $tokens);
 			} catch (Exception $e) {
@@ -205,7 +205,7 @@ EOT;
 				$this -> lastQuery['executedQuery'] = $query;
 				$phCount = parent::getPlaceholderCount ($whereStmt);
 				$result = parent::query ($query, substr ($phTypes, 0, -$phCount), array_slice ($phValues, 0, -$phCount));
-				$this -> lastQuery['SimpleDb'] = parent::getLastQuery ();
+				$this -> lastQuery['SimplePDO'] = parent::getLastQuery ();
 				$this -> checkKeys ($tableName, $updatedColumns);
 				return new CmsDbResult ($this, 'UPDATE', count ($ids), $tokens);
 			} catch (Exception $e) {
